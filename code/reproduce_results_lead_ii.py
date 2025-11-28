@@ -5,6 +5,8 @@ This script demonstrates how to run experiments using only Lead II instead of al
 Simply pass leads='II' parameter to the SCP_Experiment constructor.
 """
 
+import argparse
+import os
 from experiments.scp_experiment import SCP_Experiment
 from utils import utils
 # model configs
@@ -12,7 +14,14 @@ from configs.fastai_configs import *
 from configs.wavelet_configs import *
 
 
-def main():
+def main(device='cuda:0'):
+    # Set CUDA device
+    if device.startswith('cuda:'):
+        device_id = device.split(':')[1]
+        os.environ['CUDA_VISIBLE_DEVICES'] = device_id
+        print(f"Using device: {device} (CUDA_VISIBLE_DEVICES={device_id})")
+    else:
+        print(f"Using device: {device}")
 
     datafolder = '../dataset/1.0.1/ptbxl/'
     # datafolder_icbeb = '../data/ICBEB/'
@@ -51,4 +60,9 @@ def main():
     # For example: leads=['I', 'II', 'V1'] for only those three leads
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Reproduce results using only Lead II ECG data')
+    parser.add_argument('--device', type=str, default='cuda:0',
+                        help='Device to use for training (e.g., cuda:0, cuda:1, cpu). Default: cuda:0')
+    args = parser.parse_args()
+
+    main(device=args.device)
