@@ -29,6 +29,7 @@ docker run --gpus all -it \
   -v $(pwd)/data:/workspace/data \
   -v $(pwd)/output:/workspace/output \
   -v $(pwd)/code:/workspace/code \
+  -v /export/work/data/deep_learning/nonaka/PTBXL:/workspace/dataset \
   ecg-benchmarking:gpu
 
 # Inside the container, download the datasets

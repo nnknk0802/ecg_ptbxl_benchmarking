@@ -3,8 +3,8 @@
 # FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
 # FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 # FROM nvidia/cuda:10.1-cudnn7-devel
-FROM nvcr.io/nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
-
+# FROM nvcr.io/nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
 
 
 # Set environment variables
@@ -65,7 +65,10 @@ RUN pip install --no-cache-dir -r requirements.txt || \
      && echo "Core packages installed successfully")
 RUN pip install --no-cache-dir scikit-learn==0.23.2
 RUN pip install --no-cache-dir --no-deps wfdb==3.1.1
-     
+RUN pip install --no-cache-dir mne
+RUN pip install --no-cache-dir scikit-image
+RUN pip install --no-cache-dir fastai==1.0.61
+
 # Install TensorFlow separately (GPU version)
 RUN pip install --no-cache-dir tensorflow-gpu==2.3.0 || \
     pip install --no-cache-dir tensorflow==2.3.0
