@@ -28,6 +28,7 @@ docker build -t ecg-benchmarking:gpu .
 docker run --gpus all -it \
   -v $(pwd)/data:/workspace/data \
   -v $(pwd)/output:/workspace/output \
+  -v $(pwd)/output_leadII:/workspace/output_leadII \
   -v $(pwd)/code:/workspace/code \
   -v /export/work/data/deep_learning/nonaka/PTBXL:/workspace/dataset \
   ecg-benchmarking:gpu

@@ -27,7 +27,11 @@ conf_fastai_xresnet1d34 = {'modelname':'fastai_xresnet1d34', 'modeltype':'fastai
 
 conf_fastai_xresnet1d50 = {'modelname':'fastai_xresnet1d50', 'modeltype':'fastai_model', 
     'parameters':dict()}
-    
+
+# ADDED.
+conf_simecg_mae = {'modelname': 'simecg_mae', 'modeltype':'SIMECGMAE', 'parameters': dict()}
+
+
 #more xresnet50s
 conf_fastai_xresnet1d50_ep30 = {'modelname':'fastai_xresnet1d50_ep30', 'modeltype':'fastai_model', 
     'parameters':dict(epochs=30)}
