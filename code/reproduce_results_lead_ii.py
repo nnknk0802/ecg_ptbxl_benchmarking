@@ -14,9 +14,9 @@ from configs.wavelet_configs import *
 
 def main():
 
-    datafolder = '../data/ptbxl/'
-    datafolder_icbeb = '../data/ICBEB/'
-    outputfolder = '../output/'
+    datafolder = '../dataset/1.0.1/ptbxl/'
+    # datafolder_icbeb = '../data/ICBEB/'
+    outputfolder = '../output_leadII/'
 
     models = [
         conf_fastai_xresnet1d101,

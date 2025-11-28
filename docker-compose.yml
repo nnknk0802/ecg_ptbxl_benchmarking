@@ -20,6 +20,7 @@ services:
       - ./output:/workspace/output
       - ./code:/workspace/code
       - ./tests:/workspace/tests
+      - /export/work/data/deep_learning/nonaka/PTBXL:/workspace/dataset
 
     # Working directory
     working_dir: /workspace

@@ -1,6 +1,11 @@
 # Use NVIDIA CUDA base image for GPU support
 # For CPU-only, use: FROM python:3.8-slim
-FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
+# FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
+# FROM nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+# FROM nvidia/cuda:10.1-cudnn7-devel
+FROM nvcr.io/nvidia/cuda:10.1-cudnn7-devel-ubuntu18.04
+
+
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -53,16 +58,17 @@ RUN pip install --no-cache-dir -r requirements.txt || \
      pandas==1.1.4 \
      scikit-learn==0.23.2 \
      matplotlib==3.3.2 \
-     wfdb==3.1.1 \
+    #  wfdb==3.1.1 \
      tqdm==4.54.0 \
      pyyaml==5.3.1 \
      h5py==2.10.0 \
      && echo "Core packages installed successfully")
-
+RUN pip install --no-cache-dir scikit-learn==0.23.2
+RUN pip install --no-cache-dir --no-deps wfdb==3.1.1
+     
 # Install TensorFlow separately (GPU version)
 RUN pip install --no-cache-dir tensorflow-gpu==2.3.0 || \
     pip install --no-cache-dir tensorflow==2.3.0
-
 # Copy the rest of the application
 COPY . .
 
