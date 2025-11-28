@@ -86,7 +86,7 @@ COPY . .
 RUN mkdir -p data/ptbxl data/ICBEB output tmp_data
 
 # Set permissions
-RUN chmod +x get-datasets.sh
+# RUN chmod +x get-datasets.sh
 
-# Default command
-CMD ["/bin/bash"]
+# # Default command
+# CMD ["/bin/bash"]
