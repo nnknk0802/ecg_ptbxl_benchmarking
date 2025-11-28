@@ -16,11 +16,20 @@ Please acknowledge our work by citing the corresponding articles listed in **Ref
 If you have a GPU and [nvidia-docker2](https://github.com/NVIDIA/nvidia-docker) installed:
 
 ```bash
-# Build and run the container
-docker-compose up -d ecg-benchmarking
-
-# Enter the container
+# Method 1: Using docker-compose (basic, CPU fallback)
+docker-compose up -d
 docker-compose exec ecg-benchmarking /bin/bash
+
+# Method 2: Using docker-compose with GPU (if supported)
+docker-compose run --rm --gpus all ecg-benchmarking
+
+# Method 3: Using nvidia-docker (recommended for GPU)
+docker build -t ecg-benchmarking:gpu .
+docker run --gpus all -it \
+  -v $(pwd)/data:/workspace/data \
+  -v $(pwd)/output:/workspace/output \
+  -v $(pwd)/code:/workspace/code \
+  ecg-benchmarking:gpu
 
 # Inside the container, download the datasets
 ./get_datasets.sh
@@ -34,24 +43,24 @@ python reproduce_results.py
 For CPU-only execution:
 
 ```bash
-# Build and run CPU version
-docker-compose --profile cpu up -d ecg-benchmarking-cpu
-
-# Enter the container
-docker-compose exec ecg-benchmarking-cpu /bin/bash
+# Using dedicated CPU docker-compose file
+docker-compose -f docker-compose.cpu.yml up -d
+docker-compose -f docker-compose.cpu.yml exec ecg-benchmarking-cpu /bin/bash
 ```
 
-#### Manual Docker Build
-Alternatively, you can build and run manually:
+#### Quick Start (Simplest Method)
 
 ```bash
-# GPU version
-docker build -t ecg-benchmarking:gpu .
-docker run --gpus all -it -v $(pwd)/data:/workspace/data -v $(pwd)/output:/workspace/output ecg-benchmarking:gpu
+# Start the container (works on most systems)
+docker-compose up -d
 
-# CPU version
-docker build -f Dockerfile.cpu -t ecg-benchmarking:cpu .
-docker run -it -v $(pwd)/data:/workspace/data -v $(pwd)/output:/workspace/output ecg-benchmarking:cpu
+# Enter the container
+docker-compose exec ecg-benchmarking /bin/bash
+
+# Download datasets and run experiments
+./get_datasets.sh
+cd code
+python reproduce_results.py
 ```
 
 ### Option 2: Conda Environment
@@ -68,15 +77,22 @@ Install the dependencies (wfdb, pytorch, torchvision, cudatoolkit, fastai, fastp
 - Experiment results are saved to your host machine
 - Code changes on your host are reflected in the container
 
-**GPU Requirements**: For GPU support, you need:
-- NVIDIA GPU with CUDA support
-- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) installed
-- For `docker-compose`, use `runtime: nvidia` (older setups may need `docker-compose --compatibility`)
+**GPU Support**: The default `docker-compose.yml` works on both GPU and CPU systems:
+- On systems with NVIDIA GPU and docker GPU support, it will use the GPU
+- On systems without GPU support, it will fall back to CPU
+- For explicit GPU usage with older docker-compose versions, use Method 3 (nvidia-docker) shown above
+- For CPU-only, use `docker-compose.cpu.yml` to avoid CUDA dependencies
+
+**Docker Compose Compatibility**:
+- The configuration uses version 3.3 for maximum compatibility
+- If you have docker-compose v2+ with GPU support, you can use `--gpus all` flag
+- For older setups with nvidia-docker, use the manual `docker run` commands
 
 **Troubleshooting**:
 - If you encounter "out of shared memory" errors, uncomment `shm_size: '8gb'` in `docker-compose.yml`
 - For permission issues with mounted volumes, run `chmod -R 777 data output` on your host
 - If GPU is not detected, verify with `docker run --gpus all nvidia/cuda:10.2-base nvidia-smi`
+- If you get "Unsupported config option" errors, you may need to update docker-compose or use the manual `docker run` method
 
 ### Get data
 Download and prepare the datasets (PTB-XL and ICBEB) via the following bash-script:

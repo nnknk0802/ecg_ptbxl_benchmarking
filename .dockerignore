@@ -40,8 +40,10 @@ ecg_env.yml
 
 # Docker
 Dockerfile
+Dockerfile.cpu
 .dockerignore
 docker-compose.yml
+docker-compose.cpu.yml
 
 # Documentation
 *.md
