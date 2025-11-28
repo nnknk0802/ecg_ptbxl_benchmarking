@@ -31,10 +31,41 @@ Change directory: `cd code` and then call
 
     python reproduce_results.py
 
-This will perform all experiments for all models used in the paper. 
-Depending on the executing environment, this will take up to several hours. 
-Once finished, all trained models, predictions and results are stored in `output/`, 
-where for each experiment a sub-folder is created each with `data/`, `models/` and `results/` sub-sub-folders. 
+This will perform all experiments for all models used in the paper.
+Depending on the executing environment, this will take up to several hours.
+Once finished, all trained models, predictions and results are stored in `output/`,
+where for each experiment a sub-folder is created each with `data/`, `models/` and `results/` sub-sub-folders.
+
+### Lead-specific experiments
+
+You can also run experiments using specific ECG leads instead of all 12 leads. For example, to run experiments using only Lead II:
+
+    python reproduce_results_lead_ii.py
+
+To run experiments with custom lead selection in your own code:
+
+```python
+from experiments.scp_experiment import SCP_Experiment
+from configs.fastai_configs import *
+
+datafolder = '../data/ptbxl/'
+outputfolder = '../output/'
+models = [conf_fastai_xresnet1d101]
+
+# Use only Lead II
+e = SCP_Experiment('exp_lead_ii', 'diagnostic', datafolder, outputfolder, models, leads='II')
+e.prepare()
+e.perform()
+e.evaluate()
+
+# Or use multiple specific leads
+e = SCP_Experiment('exp_leads_i_ii_v1', 'diagnostic', datafolder, outputfolder, models, leads=['I', 'II', 'V1'])
+e.prepare()
+e.perform()
+e.evaluate()
+```
+
+Available lead names: `'I'`, `'II'`, `'III'`, `'aVR'`, `'aVL'`, `'aVF'`, `'V1'`, `'V2'`, `'V3'`, `'V4'`, `'V5'`, `'V6'` 
 
 ### Download models and results
 
